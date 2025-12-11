@@ -1,0 +1,107 @@
+/* Палитра та же, что и в style.css */
+:root {
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --primary: #007BFF;
+    --success: #28a745;
+    --danger: #dc3545;
+    --text-main: #333;
+    --text-secondary: #666;
+}
+
+/* Общий фон */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Контейнер */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+/* Заголовки */
+h1 {
+    text-align: center;
+    color: var(--text-main);
+    margin-bottom: 15px;
+}
+p {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+}
+
+/* Таблица интересов */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+th, td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+}
+th {
+    background-color: #f9fafb;
+    color: var(--text-secondary);
+}
+.actions a {
+    margin-right: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.actions a:hover {
+    text-decoration: underline;
+}
+
+/* Форма добавления */
+.form-inline {
+    display: flex;
+    gap: 12px;
+}
+.form-inline input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.form-inline button {
+    padding: 12px 24px;
+    background: var(--success);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.form-inline button:hover {
+    background: #218838;
+}
+
+/* Кнопка выхода */
+.logout {
+    text-align: center;
+    margin-top: 25px;
+}
+.logout form button {
+    background: var(--danger);
+    border: none;
+    padding: 12px 24px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.logout form button:hover {
+    background: #c82333;
+}

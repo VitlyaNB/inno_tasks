@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет</title>
+    <!-- Основной стиль кабинета -->
+    <link rel="stylesheet" href="/front/css/PageStyle.css">
+    <!-- Стиль модального окна -->
+    <link rel="stylesheet" href="/front/css/ModalStyle.css">
+</head>
+<body>
+<div class="container">
+    <h1>Добро пожаловать, {{username}}!</h1>
+    <p>Вы успешно вошли в систему.</p>
+
+    {{interests_table}}
+
+    <!-- Форма добавления нового интереса -->
+    <form class="form-inline" action="/php/interests_add.php" method="post">
+        <input type="text" name="interest" placeholder="Добавить новый интерес" required>
+        <button type="submit">Добавить</button>
+    </form>
+
+    <!-- Кнопка выхода -->
+    <div class="logout">
+        <form action="/php/auth_logout.php" method="post">
+            <button type="submit">Выйти</button>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования -->
+<div id="editOverlay" class="overlay hidden">
+    <div class="modal">
+        <h2>Редактировать интерес</h2>
+        <form id="editForm" class="modal-form">
+            <input type="hidden" name="id" id="editId">
+            <input type="text" name="interest" id="editInterest" class="modal-input" required>
+            <div class="modal-buttons">
+                <button type="submit" class="modal-button save">Сохранить</button>
+                <button type="button" class="modal-button cancel" onclick="closeModal()">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Подключение JS -->
+<script src="/front/js/PageScript.js"></script>
+</body>
+</html>

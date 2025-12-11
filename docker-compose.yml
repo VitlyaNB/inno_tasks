@@ -1,0 +1,43 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: myapp-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./public:/var/www/html:ro   # монтируем корневую public
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: .              # текущая папка, где лежит docker-compose.yml
+      dockerfile: Dockerfile  # используем Dockerfile из корня проекта
+    container_name: myapp-php
+    volumes:
+      - ./public:/var/www/html
+    expose:
+      - "9000"
+
+  mysql:
+    image: mysql:8.0
+    container_name: myapp-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: myapp
+      MYSQL_PASSWORD: myapp
+    ports:
+      - "3306:3306"
+    volumes:
+      - php_project_mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7.2
+    container_name: myapp-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  php_project_mysql_data:

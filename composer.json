@@ -1,0 +1,17 @@
+{
+    "name": "vitaly/php_oop",
+    "autoload": {
+        "psr-4": {
+          "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "vitali"
+        }
+    ],
+    "require": {
+      "ext-pdo": "*",
+        "phpmailer/phpmailer": "^7.0"
+    }
+}

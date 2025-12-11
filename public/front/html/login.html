@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <style>
+        .login-form input.error {
+            border: 1px solid red;
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+
+        #errorMessage {
+            color: red;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            50% { transform: translateX(4px); }
+            75% { transform: translateX(-4px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>Вход</h1>
+
+    <!-- убрал action, чтобы форма не уходила напрямую -->
+    <form method="post" class="login-form">
+        <input type="email" name="email" placeholder="Email адрес" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+        <div id="errorMessage"></div>
+    </form>
+
+    <div class="login-footer">
+        <span>Нет аккаунта?</span>
+        <a href="/front/html/register.html" class="footer-link">Зарегистрироваться</a>
+    </div>
+
+    <div class="login-footer">
+        <span>Забыли пароль?</span>
+        <a href="/front/html/forgot_password.html" class="footer-link">Восстановить</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('.login-form');
+        const emailField = form.querySelector('input[name="email"]');
+        const passwordField = form.querySelector('input[name="password"]');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // очистка предыдущих ошибок
+            passwordField.classList.remove('error');
+            errorMessage.textContent = '';
+
+            const formData = new FormData();
+            formData.append('email', emailField.value);
+            formData.append('password', passwordField.value);
+
+            try {
+                const response = await fetch('/php/auth_login.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const target = result.role === 'admin' ? '/php/PageForAdmin.php' : '/php/PageForUsers.php';
+                    window.location.href = target;
+                } else {
+                    passwordField.value = '';
+                    passwordField.classList.add('error');
+                    errorMessage.textContent = result.message;
+                }
+            } catch (err) {
+                console.error('Ошибка запроса:', err);
+                errorMessage.textContent = 'Ошибка соединения с сервером';
+            }
+        });
+    });
+</script>
+</body>
+</html>

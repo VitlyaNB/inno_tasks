@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Подтверждение кода</title>
+    <link rel="stylesheet" href="../css/VerifyCode.css">
+</head>
+<body>
+<div class="verify-container">
+    <h1>Подтверждение кода</h1>
+
+    <form class="verify-form" action="/php/check_reset_code.php" method="post">
+        <input type="text" name="code" placeholder="Введите код из письма" required>
+        <button type="submit">Проверить</button>
+    </form>
+
+    <div class="form-footer">
+        <a href="http://localhost:8080/front/html/login.html" class="footer-link">Отмена</a>
+    </div>
+</div>
+</body>
+</html>

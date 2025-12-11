@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="register-container">
+    <h1>Регистрация</h1>
+    <div class="form-container">
+        <form action="/php/auth_register.php" method="post">
+            <input type="text" name="name" placeholder="Имя" required>
+            <input type="email" name="email" placeholder="Email адрес" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+    <div class="register-footer">
+        <p>Уже есть аккаунт? <a href="/front/html/login.html">Войти</a></p>
+    </div>
+</div>
+</body>
+</html>

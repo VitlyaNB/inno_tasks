@@ -1,0 +1,136 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #fff;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.admin-container h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #ff6a00, #ee0979);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    transition: transform .2s;
+}
+.card:hover { transform: translateY(-3px); }
+.card-title { font-size: 0.95em; opacity: 0.8; }
+.card-value { font-size: 1.8em; font-weight: 700; }
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.users-table th, .users-table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+.users-table thead {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.users-table tbody tr {
+    background: rgba(255,255,255,0.05);
+    transition: background 0.3s;
+}
+.users-table tbody tr:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+}
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+
+/* Кнопки действий */
+.btn-edit {
+    background: linear-gradient(90deg, #00b4db, #0083b0);
+    color: #fff;
+    margin-right: 6px;
+}
+.btn-edit:hover {
+    background: linear-gradient(90deg, #0083b0, #00b4db);
+}
+
+.btn-delete {
+    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+    color: #fff;
+}
+.btn-delete:hover {
+    background: linear-gradient(90deg, #ff4b2b, #ff416c);
+}
+
+.logout button {
+    margin-top: 20px;
+    background: linear-gradient(90deg, #00b09b, #96c93d);
+    color: #fff;
+}
+.logout button:hover {
+    transform: scale(1.03);
+    background: linear-gradient(90deg, #96c93d, #00b09b);
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+.admin-form input, .admin-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 14px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    outline: none;
+}
+.admin-form input::placeholder { color: rgba(255,255,255,0.7); }
+
+.admin-form .actions {
+    display: flex;
+    gap: 10px;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
