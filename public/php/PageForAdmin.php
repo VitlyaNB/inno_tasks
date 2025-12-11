@@ -3,13 +3,11 @@ global $pdo;
 session_start();
 require 'db.php';
 
-// Только админ
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: /front/html/login.html");
     exit;
 }
 
-// Статистика
 $totalStmt  = $pdo->query("SELECT COUNT(*) AS c FROM users");
 $totalUsers = (int)$totalStmt->fetch()['c'];
 
@@ -21,11 +19,9 @@ $usersStmt = $pdo->prepare("SELECT COUNT(*) AS c FROM users WHERE role = 'user'"
 $usersStmt->execute();
 $usersCount = (int)$usersStmt->fetch()['c'];
 
-// Список пользователей
 $stmt = $pdo->query("SELECT id, name, email, role FROM users ORDER BY id ASC");
 $users = $stmt->fetchAll();
 
-// Таблица
 $users_table = '';
 foreach ($users as $user) {
     $id    = (int)$user['id'];
@@ -51,7 +47,6 @@ foreach ($users as $user) {
     </tr>";
 }
 
-// Вставка в шаблон
 $html = file_get_contents(__DIR__ . '/../front/html/PageForAdmin.html');
 $html = str_replace('{{admin_name}}', htmlspecialchars($_SESSION['user_name'] ?? 'Админ'), $html);
 $html = str_replace('{{users_table}}', $users_table, $html);

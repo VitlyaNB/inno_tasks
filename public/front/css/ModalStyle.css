@@ -1,10 +1,9 @@
-/* Блюр фона при открытом модальном окне */
+
 body.blurred .container {
     filter: blur(5px);
     pointer-events: none;
 }
 
-/* Оверлей */
 .overlay {
     position: fixed;
     top: 0; left: 0;
@@ -19,7 +18,7 @@ body.blurred .container {
     display: none;
 }
 
-/* Модальное окно */
+
 .modal {
     background: #fff;
     padding: 30px;
@@ -71,7 +70,7 @@ body.blurred .container {
     color: white;
 }
 
-/* Анимация */
+
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }

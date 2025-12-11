@@ -19,7 +19,6 @@ $expires = date('Y-m-d H:i:s', time() + 600); // 10 минут
 $stmt = $pdo->prepare('UPDATE users SET reset_token = ?, reset_expires = ? WHERE email = ?');
 $stmt->execute([$code, $expires, $email]);
 
-// Отправка письма
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();

@@ -79,7 +79,6 @@ button:hover {
     box-shadow: 0 6px 14px rgba(0,0,0,0.3);
 }
 
-/* Кнопки действий */
 .btn-edit {
     background: linear-gradient(90deg, #00b4db, #0083b0);
     color: #fff;

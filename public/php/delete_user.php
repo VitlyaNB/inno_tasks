@@ -23,6 +23,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// сразу редиректим обратно в админку
 header("Location: PageForAdmin.php");
 exit;

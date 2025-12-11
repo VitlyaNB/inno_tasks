@@ -1,1 +1,9 @@
+app/
+config/
 mysql_data/
+public/
+vendor/
+vievs/
+docker-compose.yml
+Dockerfile
+nginx.conf
