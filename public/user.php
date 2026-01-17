@@ -4,39 +4,44 @@ declare(strict_types=1);
 use App\Domain\Support\Helpers;
 use App\Domain\Repository\InterestRepository;
 use App\Domain\Service\InterestService;
+use App\Domain\DTO\InterestDTO;
+use App\Domain\DTO\UserDTO;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 Helpers::requireUser();
 
-$userId = (int)$_SESSION['user_id'];
-$userEmail = $_SESSION['user'];
+$userDto = UserDTO::fromSession();
+$userId = $userDto->id;
 
 $service = new InterestService(new InterestRepository());
 
-if (Helpers::isPost() && ($_POST['action'] ?? '') === 'add') {
-    $interest = trim($_POST['interest'] ?? '');
-    if ($interest !== '') {
-        $service->add($userId, $interest);
-    }
-    header('Location: /user.php');
-    exit;
-}
+if (Helpers::isPost()) {
+    $action = $_POST['action'] ?? '';
 
-if (Helpers::isPost() && ($_POST['action'] ?? '') === 'edit') {
-    $interestId = (int)($_POST['id'] ?? 0);
-    $interest = trim($_POST['interest'] ?? '');
-    if ($interestId > 0 && $interest !== '') {
-        $service->update($userId, $interestId, $interest);
+    if (in_array($action, ['add', 'edit'])) {
+        $interestDto = InterestDTO::fromPost($action);
+
+        if ($interestDto && $interestDto->validate()) {
+            if ($action === 'add') {
+                $service->add($interestDto);
+            } elseif ($action === 'edit') {
+                $service->update($interestDto);
+            }
+        }
     }
+
     header('Location: /user.php');
     exit;
 }
 
 if (isset($_GET['delete'])) {
     $interestId = (int)$_GET['delete'];
+
     if ($interestId > 0) {
-        $service->delete($userId, $interestId);
+        $interestDto = new InterestDTO($interestId, '', $userId);
+        $service->delete($interestDto);
     }
+
     header('Location: /user.php');
     exit;
 }

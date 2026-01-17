@@ -2,8 +2,10 @@
 declare(strict_types=1);
 
 use App\Domain\Support\Helpers;
-use App\Domain\Repository\UserRepository;
 use App\Domain\Service\AuthService;
+use App\Domain\Repository\UserRepository;
+use App\Domain\DTO\RegisterDTO;
+use App\Domain\DTO\UserDTO;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 Helpers::ensureSession();
@@ -11,36 +13,20 @@ Helpers::ensureSession();
 $errors = [];
 
 if (Helpers::isPost()) {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm'] ?? '';
 
-    if ($name === '') {
-        $errors[] = 'Имя обязательно';
-    }
+    $registerDto = RegisterDTO::fromPost();
 
-    if (!Helpers::isValidEmail($email)) {
-        $errors[] = 'Некорректный email';
-    }
-
-    if (strlen($password) < 6) {
-        $errors[] = 'Пароль должен быть не менее 6 символов';
-    }
-
-    if ($password !== $confirm) {
-        $errors[] = 'Пароли не совпадают';
-    }
+    $errors = $registerDto->validate();
 
     if (empty($errors)) {
         $service = new AuthService(new UserRepository());
-        $userId = $service->register($name, $email, $password);
+        $userDto = $service->register($registerDto);
 
-        if ($userId === null) {
+        if ($userDto === null) {
             $errors[] = 'Пользователь с таким email уже существует';
         } else {
-            $_SESSION['user_id'] = $userId;
-            $_SESSION['user'] = $email;
+            $userDto->toSession();
+
             header('Location: /user.php');
             exit;
         }
@@ -120,7 +106,6 @@ if (Helpers::isPost()) {
             <input type="password" name="confirm" id="confirm" class="form-control" required>
         </div>
 
-        <!-- Кнопка теперь синяя -->
         <button type="submit" class="btn btn-primary w-100 mb-3">Зарегистрироваться</button>
         <a href="/login.php" class="btn btn-outline-secondary w-100">Назад к входу</a>
     </form>

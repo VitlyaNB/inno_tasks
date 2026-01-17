@@ -2,8 +2,10 @@
 declare(strict_types=1);
 
 use App\Domain\Support\Helpers;
-use App\Domain\Repository\UserRepository;
 use App\Domain\Service\AuthService;
+use App\Domain\Repository\UserRepository;
+use App\Domain\DTO\LoginDTO;
+use App\Domain\DTO\UserDTO;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 Helpers::ensureSession();
@@ -11,25 +13,22 @@ Helpers::ensureSession();
 $error = '';
 
 if (Helpers::isPost()) {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $loginDto = LoginDTO::fromPost();
 
-    if ($email === '' || $password === '') {
-        $error = 'Введите email и пароль';
+    $validationErrors = $loginDto->validate();
+
+    if (!empty($validationErrors)) {
+        $error = $validationErrors[0];
     } else {
         $service = new AuthService(new UserRepository());
-        $user = $service->login($email, $password);
+        $userDto = $service->login($loginDto);
 
-        if ($user === null) {
+        if ($userDto === null) {
             $error = 'Неверный email или пароль';
         } else {
-            // сохраняем данные в сессии
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['name'] = $user['name'];
+            $userDto->toSession();
 
-            if ($user['role'] === 'admin') {
+            if ($userDto->role === 'admin') {
                 header('Location: /admin.php');
             } else {
                 header('Location: /user.php');
