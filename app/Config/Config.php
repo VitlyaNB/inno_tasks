@@ -13,7 +13,7 @@ class Config
     public static function db(): array
     {
         return [
-            'host' => self::env('DB_HOST', 'db'),
+            'host' => self::env('DB_HOST', 'mysql'),
             'port' => self::env('DB_PORT', '3306'),
             'name' => self::env('DB_NAME', 'app_db'),
             'user' => self::env('DB_USER', 'app_user'),
@@ -30,12 +30,12 @@ class Config
     public static function smtp(): array
     {
         return [
-            'host' => self::env('SMTP_HOST', ''),
-            'port' => (int)self::env('SMTP_PORT', '465'),
-            'user' => self::env('SMTP_USER', ''),
-            'pass' => self::env('SMTP_PASS', ''),
-            'secure' => self::env('SMTP_SECURE', 'ssl'), // ssl or tls
-            'fromEmail' => self::env('SMTP_USER', ''),
+            'host' => self::env('MAIL_HOST', ''),
+            'port' => (int)self::env('MAIL_PORT', '465'),
+            'user' => self::env('MAIL_USER', ''),
+            'pass' => self::env('MAIL_PASS', ''),
+            'secure' => self::env('MAIL_SECURE', 'ssl'), // ssl or tls
+            'fromEmail' => self::env('MAIL_FROM', self::env('MAIL_USER', '')), // ← отдельная переменная
             'fromName' => 'Support',
         ];
     }

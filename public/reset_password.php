@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Support\Helpers;
+use App\Domain\Support\Helpers;
 use App\Support\Validator;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Repository\PasswordResetTokenRepository;
@@ -30,6 +30,7 @@ if (Helpers::isPost()) {
         if (!$done) $error = 'Ссылка недействительна или истекла.';
     }
 }
+
 ?>
 <!doctype html>
 <html lang="ru">

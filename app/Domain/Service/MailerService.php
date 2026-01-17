@@ -3,12 +3,16 @@
 namespace App\Domain\Service;
 
 use App\Config\Config;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class MailerService
 {
     private PHPMailer $mailer;
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
         $smtp = Config::smtp();
@@ -34,6 +38,7 @@ class MailerService
             $this->mailer->Body = $html;
             return $this->mailer->send();
         } catch (\Throwable $e) {
+            error_log("Mailer error: " . $e->getMessage());
             return false;
         }
     }

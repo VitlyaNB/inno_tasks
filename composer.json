@@ -3,7 +3,8 @@
   "description": "Demo project with PHP, Nginx, MySQL",
   "type": "project",
   "require": {
-    "phpmailer/phpmailer": "^6.9"
+    "phpmailer/phpmailer": "^6.9",
+    "ext-pdo": "*"
   },
   "autoload": {
     "psr-4": {

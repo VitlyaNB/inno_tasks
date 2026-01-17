@@ -9,18 +9,20 @@ services:
       - ./vendor:/var/www/vendor
     environment:
       APP_ENV: ${APP_ENV:-local}
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_NAME: ${DB_NAME:-app_db}
-      DB_USER: ${DB_USER:-app_user}
-      DB_PASS: ${DB_PASS:-app_pass}
-      MAIL_HOST: ${MAIL_HOST:-smtp.yandex.com}
-      MAIL_PORT: ${MAIL_PORT:-465}
-      MAIL_USER: ${MAIL_USER:-your_yandex_login@yandex.com}
-      MAIL_PASS: ${MAIL_PASS:-your_yandex_app_password}
-      MAIL_FROM: ${MAIL_FROM:-your_yandex_login@yandex.com}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+      MAIL_SECURE: ${MAIL_SECURE}
+      MAIL_FROM: ${MAIL_FROM}
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - appnet
 
@@ -44,10 +46,10 @@ services:
     container_name: app-mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      MYSQL_DATABASE: ${DB_NAME:-app_db}
-      MYSQL_USER: ${DB_USER:-app_user}
-      MYSQL_PASSWORD: ${DB_PASS:-app_pass}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - dbdata:/var/lib/mysql
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -55,6 +57,11 @@ services:
       - "3306:3306"
     networks:
       - appnet
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   appnet:
