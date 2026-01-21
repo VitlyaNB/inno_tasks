@@ -2,3 +2,4 @@ inno_tasks/
 .env
 composer.lock
 /vendor
+.idea
