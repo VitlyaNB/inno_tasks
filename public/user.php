@@ -67,14 +67,14 @@ $interests = $service->list($userId);
             <ul class="list-group mb-3">
                 <?php foreach ($interests as $interest): ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <?= htmlspecialchars($interest['title']) ?>
+                        <?= htmlspecialchars($interest->title) ?>
                         <div>
                             <button class="btn btn-sm btn-warning"
-                                    onclick="editInterest(<?= $interest['id'] ?>, '<?= htmlspecialchars($interest['title'], ENT_QUOTES) ?>')">
+                                    onclick="editInterest(<?= $interest->id ?>, '<?= htmlspecialchars($interest->title, ENT_QUOTES) ?>')">
                                 Редактировать
                             </button>
 
-                            <a href="/user.php?delete=<?= $interest['id'] ?>" class="btn btn-sm btn-danger">Удалить</a>
+                            <a href="/user.php?delete=<?= $interest->id ?>" class="btn btn-sm btn-danger">Удалить</a>
                         </div>
                     </li>
                 <?php endforeach; ?>
