@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace App\Domain\Service;
 
 use App\Config\Config;
+use App\Database\Connection;
 use App\Domain\Repository\PasswordResetTokenRepository;
 use App\Domain\Repository\UserRepository;
 
-class PasswordResetService
+final class PasswordResetService
 {
     public function __construct(
         private UserRepository $users,
@@ -48,7 +49,7 @@ class PasswordResetService
         $userId = (int)$row['user_id'];
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
 
-        $pdo = \App\Database\Connection::get();
+        $pdo = Connection::get();
         $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
         $stmt->execute([$hash, $userId]);
 

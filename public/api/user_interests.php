@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Repository\InterestRepository;
+use App\Domain\Support\Validator;
+
 require_once __DIR__ . '/../../app/Bootstrap.php';
 require_once __DIR__ . '/middleware.php';
 
 header('Content-Type: application/json');
 
 $currentUser = Api\Auth::requireAuth();
+$interestRepository = new InterestRepository();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $db = \App\Database\Connection::get();
-    $stmt = $db->prepare("SELECT * FROM interests WHERE user_id = ? ORDER BY created_at DESC");
-    $stmt->execute([$currentUser->id]);
-    $interests = $stmt->fetchAll();
-
+    $interests = $interestRepository->byUserId($currentUser->id);
     echo json_encode($interests);
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,17 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $title = trim($input['title']);
 
-    if (!\App\Support\Validator::interestTitle($title)) {
+    if (!Validator::interestTitle($title)) {
         http_response_code(400);
         echo json_encode(['error' => 'Title must be 1-255 characters']);
         exit;
     }
 
-    $db = \App\Database\Connection::get();
-    $stmt = $db->prepare("INSERT INTO interests (user_id, title) VALUES (?, ?)");
-    $stmt->execute([$currentUser->id, $title]);
-
-    $interestId = $db->lastInsertId();
+    $interestId = $interestRepository->create($currentUser->id, $title);
 
     http_response_code(201);
     echo json_encode([

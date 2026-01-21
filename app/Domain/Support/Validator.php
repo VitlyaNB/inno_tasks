@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Support;
+declare(strict_types=1);
 
-class Validator
+namespace App\Domain\Support;
+
+final class Validator
 {
     public static function name(string $name): bool
     {

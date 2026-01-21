@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Repository;
 
 use App\Database\Connection;
 
-class InterestRepository
+final class InterestRepository
 {
     public function byUserId(int $userId): array
     {
@@ -36,5 +38,24 @@ class InterestRepository
     {
         $stmt = Connection::get()->prepare("DELETE FROM interests WHERE id = ?");
         $stmt->execute([$id]);
+    }
+
+    public function getAllWithPagination(int $limit, int $offset): array
+    {
+        $stmt = Connection::get()->prepare("
+            SELECT i.*, u.name as user_name, u.email as user_email
+            FROM interests i
+            JOIN users u ON i.user_id = u.id
+            ORDER BY i.created_at DESC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$limit, $offset]);
+        return $stmt->fetchAll();
+    }
+
+    public function getTotalCount(): int
+    {
+        $stmt = Connection::get()->query("SELECT COUNT(*) as count FROM interests");
+        return (int)$stmt->fetch()['count'];
     }
 }

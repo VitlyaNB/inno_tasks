@@ -4,15 +4,25 @@ declare(strict_types=1);
 
 namespace App\Domain\DTO;
 
-class UserDTO
+use App\Domain\Entity\User;
+
+final readonly class UserDTO
 {
     public function __construct(
-        public readonly int    $id,
-        public readonly string $name,
-        public readonly string $email,
-        public readonly string $role
-    )
+        public int $id,
+        public string $name,
+        public string $email,
+        public string $role
+    ) {}
+
+    public static function fromEntity(User $user): self
     {
+        return new self(
+            id: $user->id,
+            name: $user->name,
+            email: $user->email,
+            role: $user->role
+        );
     }
 
     public static function fromSession(): ?self
@@ -26,7 +36,7 @@ class UserDTO
         }
 
         return new self(
-            id: $_SESSION['user_id'],
+            id: (int)$_SESSION['user_id'],
             name: $_SESSION['name'] ?? '',
             email: $_SESSION['user'] ?? '',
             role: $_SESSION['role'] ?? 'user'
@@ -43,5 +53,15 @@ class UserDTO
         $_SESSION['name'] = $this->name;
         $_SESSION['user'] = $this->email;
         $_SESSION['role'] = $this->role;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role
+        ];
     }
 }

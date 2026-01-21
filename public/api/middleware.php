@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api;
 
 use App\Domain\Repository\UserRepository;
+use App\Domain\Entity\User;
 
 class Auth
 {
@@ -12,7 +15,7 @@ class Auth
         return isset($_SESSION['user_id']);
     }
 
-    public static function user(): ?\App\Domain\Entity\User
+    public static function user(): ?User
     {
         session_start();
 
@@ -24,7 +27,7 @@ class Auth
         return $userRepository->findById($_SESSION['user_id']);
     }
 
-    public static function requireAuth(): \App\Domain\Entity\User
+    public static function requireAuth(): User
     {
         $user = self::user();
 
@@ -37,7 +40,7 @@ class Auth
         return $user;
     }
 
-    public static function requireAdmin(): \App\Domain\Entity\User
+    public static function requireAdmin(): User
     {
         $user = self::requireAuth();
 

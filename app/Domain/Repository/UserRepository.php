@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Repository;
 
 use App\Database\Connection;
 use App\Domain\Entity\User;
 use PDO;
 
-class UserRepository
+final class UserRepository
 {
     public function findByEmail(string $email): ?User
     {

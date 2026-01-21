@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Service\AuthService;
+use App\Domain\Repository\UserRepository;
+use App\Domain\DTO\RegisterDTO;
+use App\Domain\Support\Validator;
+
 require_once __DIR__ . '/../app/Bootstrap.php';
 require_once __DIR__ . '/middleware.php';
 
@@ -27,50 +34,55 @@ try {
     $email = trim($input['email']);
     $password = $input['password'];
 
-    if (!\App\Support\Validator::name($name)) {
+    if (!Validator::name($name)) {
         http_response_code(400);
         echo json_encode(['error' => 'Name must be 1-100 characters']);
         exit;
     }
 
-    if (!\App\Support\Validator::email($email)) {
+    if (!Validator::email($email)) {
         http_response_code(400);
         echo json_encode(['error' => 'Invalid email format']);
         exit;
     }
 
-    if (!\App\Support\Validator::password($password)) {
+    if (!Validator::password($password)) {
         http_response_code(400);
         echo json_encode(['error' => 'Password must be at least 6 characters (letters and digits only)']);
         exit;
     }
 
-    $authService = new \App\Domain\Service\AuthService(new \App\Domain\Repository\UserRepository());
-    $userId = $authService->register($name, $email, $password);
+    $registerDto = new RegisterDTO(
+        name: $name,
+        email: $email,
+        password: $password,
+        confirmPassword: $password // API doesn't have confirm password, so use password
+    );
 
-    if (!$userId) {
+    $authService = new AuthService(new UserRepository());
+    $userDto = $authService->register($registerDto);
+
+    if (!$userDto) {
         http_response_code(409);
         echo json_encode(['error' => 'Email already exists']);
         exit;
     }
 
-    $userData = $authService->login($email, $password);
-
     session_start();
-    $_SESSION['user_id'] = $userData['id'];
-    $_SESSION['user_role'] = $userData['role'];
-    $_SESSION['user_name'] = $userData['name'];
-    $_SESSION['user_email'] = $userData['email'];
+    $_SESSION['user_id'] = $userDto->id;
+    $_SESSION['user_role'] = $userDto->role;
+    $_SESSION['user_name'] = $userDto->name;
+    $_SESSION['user_email'] = $userDto->email;
 
     http_response_code(201);
     echo json_encode([
         'success' => true,
-        'user_id' => $userId,
+        'user_id' => $userDto->id,
         'user' => [
-            'id' => $userData['id'],
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'role' => $userData['role']
+            'id' => $userDto->id,
+            'name' => $userDto->name,
+            'email' => $userDto->email,
+            'role' => $userDto->role
         ]
     ]);
 

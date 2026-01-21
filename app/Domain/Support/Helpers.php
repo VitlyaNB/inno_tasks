@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Support;
 
-class Helpers
+final class Helpers
 {
     public static function ensureSession(): void
     {

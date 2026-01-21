@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Repository\UserRepository;
+use App\Domain\Repository\PasswordResetTokenRepository;
+use App\Domain\Service\MailerService;
+use App\Domain\Service\PasswordResetService;
+use App\Domain\Support\Validator;
+
 require_once __DIR__ . '/../../app/Bootstrap.php';
 require_once __DIR__ . '/middleware.php';
 
@@ -26,14 +34,18 @@ try {
     $token = trim($input['token']);
     $password = $input['password'];
 
-    if (!\App\Support\Validator::password($password)) {
+    if (!Validator::password($password)) {
         http_response_code(400);
         echo json_encode(['error' => 'Password must be at least 6 characters (letters and digits only)']);
         exit;
     }
 
-    $userRepository = new \App\Domain\Repository\UserRepository();
-    $passwordResetService = new \App\Domain\Service\PasswordResetService($userRepository);
+    $userRepository = new UserRepository();
+    $passwordResetService = new PasswordResetService(
+        $userRepository,
+        new PasswordResetTokenRepository(),
+        new MailerService()
+    );
 
     $result = $passwordResetService->reset($token, $password);
 

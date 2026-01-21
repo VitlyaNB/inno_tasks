@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Repository\UserRepository;
+use App\Domain\Repository\PasswordResetTokenRepository;
+use App\Domain\Service\MailerService;
+use App\Domain\Service\PasswordResetService;
+use App\Domain\Support\Validator;
+
 require_once __DIR__ . '/../../app/Bootstrap.php';
 require_once __DIR__ . '/middleware.php';
 
@@ -22,21 +30,24 @@ try {
 
     $email = trim($input['email']);
 
-    if (!\App\Support\Validator::email($email)) {
+    if (!Validator::email($email)) {
         http_response_code(400);
         echo json_encode(['error' => 'Invalid email format']);
         exit;
     }
 
-    $userRepository = new \App\Domain\Repository\UserRepository();
-    $passwordResetService = new \App\Domain\Service\PasswordResetService($userRepository);
+    $userRepository = new UserRepository();
+    $passwordResetService = new PasswordResetService(
+        $userRepository,
+        new PasswordResetTokenRepository(),
+        new MailerService()
+    );
 
     $result = $passwordResetService->request($email);
 
     if ($result) {
         echo json_encode(['success' => true, 'message' => 'Reset instructions sent to email']);
     } else {
-
         echo json_encode(['success' => true, 'message' => 'If email exists, reset instructions will be sent']);
     }
 

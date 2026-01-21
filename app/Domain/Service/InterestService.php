@@ -6,7 +6,7 @@ namespace App\Domain\Service;
 use App\Domain\Repository\InterestRepository;
 use App\Domain\DTO\InterestDTO;
 
-class InterestService
+final class InterestService
 {
     public function __construct(
         private InterestRepository $repo

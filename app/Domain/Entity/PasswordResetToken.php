@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-class PasswordResetToken
+final class PasswordResetToken
 {
     public function __construct(
         public ?int    $id,

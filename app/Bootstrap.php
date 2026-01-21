@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use App\Domain\Repository\UserRepository;
 
-class Bootstrap
+final class Bootstrap
 {
     public static function run(): void
     {

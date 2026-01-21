@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Repository;
 
 use App\Database\Connection;
 
-class PasswordResetTokenRepository
+final class PasswordResetTokenRepository
 {
     public function create(int $userId, string $token, string $expiresAt): void
     {

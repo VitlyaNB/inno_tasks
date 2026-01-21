@@ -1,66 +1,38 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\DTO;
 
-use App\Domain\Entity\User;
-
-class UserDTO
+final readonly class LoginDTO
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $name,
-        public readonly string $email,
-        public readonly string $role
+        public string $email,
+        public string $password
     ) {}
 
-    public static function fromEntity(User $user): self
+    public static function fromPost(): self
     {
         return new self(
-            id: $user->id,
-            name: $user->name,
-            email: $user->email,
-            role: $user->role
+            email: trim($_POST['email'] ?? ''),
+            password: $_POST['password'] ?? ''
         );
     }
 
-    public static function fromSession(): ?self
+    public function validate(): array
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        $errors = [];
+
+        if (empty($this->email)) {
+            $errors[] = 'Email обязателен';
+        } elseif (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Неверный формат email';
         }
 
-        if (!isset($_SESSION['user_id'])) {
-            return null;
+        if (empty($this->password)) {
+            $errors[] = 'Пароль обязателен';
         }
 
-        return new self(
-            id: (int)$_SESSION['user_id'],
-            name: $_SESSION['name'] ?? '',
-            email: $_SESSION['user'] ?? '',
-            role: $_SESSION['role'] ?? 'user'
-        );
-    }
-
-    public function toSession(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $_SESSION['user_id'] = $this->id;
-        $_SESSION['name'] = $this->name;
-        $_SESSION['user'] = $this->email;
-        $_SESSION['role'] = $this->role;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'role' => $this->role
-        ];
+        return $errors;
     }
 }

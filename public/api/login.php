@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Service\AuthService;
+use App\Domain\Repository\UserRepository;
+use App\Domain\DTO\LoginDTO;
+use App\Domain\Support\Validator;
+
 require_once __DIR__ . '/../../app/Bootstrap.php';
 require_once __DIR__ . '/middleware.php';
 
@@ -23,34 +30,35 @@ try {
     $email = trim($input['email']);
     $password = $input['password'];
 
-    if (!\App\Support\Validator::email($email)) {
+    if (!Validator::email($email)) {
         http_response_code(400);
         echo json_encode(['error' => 'Invalid email format']);
         exit;
     }
 
-    $authService = new \App\Domain\Service\AuthService(new \App\Domain\Repository\UserRepository());
-    $userData = $authService->login($email, $password);
+    $loginDto = new LoginDTO(email: $email, password: $password);
+    $authService = new AuthService(new UserRepository());
+    $userDto = $authService->login($loginDto);
 
-    if (!$userData) {
+    if (!$userDto) {
         http_response_code(401);
         echo json_encode(['error' => 'Invalid credentials']);
         exit;
     }
 
     session_start();
-    $_SESSION['user_id'] = $userData['id'];
-    $_SESSION['user_role'] = $userData['role'];
-    $_SESSION['user_name'] = $userData['name'];
-    $_SESSION['user_email'] = $userData['email'];
+    $_SESSION['user_id'] = $userDto->id;
+    $_SESSION['user_role'] = $userDto->role;
+    $_SESSION['user_name'] = $userDto->name;
+    $_SESSION['user_email'] = $userDto->email;
 
     echo json_encode([
         'success' => true,
         'user' => [
-            'id' => $userData['id'],
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'role' => $userData['role']
+            'id' => $userDto->id,
+            'name' => $userDto->name,
+            'email' => $userDto->email,
+            'role' => $userDto->role
         ]
     ]);
 

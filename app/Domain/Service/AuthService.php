@@ -8,7 +8,7 @@ use App\Domain\DTO\LoginDTO;
 use App\Domain\DTO\RegisterDTO;
 use App\Domain\DTO\UserDTO;
 
-class AuthService
+final class AuthService
 {
     public function __construct(
         private UserRepository $users

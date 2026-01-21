@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Database;
 
 use App\Config\Config;
 use PDO;
 use PDOException;
 
-class Connection
+final class Connection
 {
     private static ?PDO $pdo = null;
 

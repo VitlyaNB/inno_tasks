@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Service\AuthService;
+use App\Domain\Repository\UserRepository;
+use App\Domain\DTO\RegisterDTO;
+use App\Database\Connection;
+
 require_once __DIR__ . '/../../app/Bootstrap.php';
 require_once __DIR__ . '/middleware.php';
 
@@ -14,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-    $userRepository = new \App\Domain\Repository\UserRepository();
+    $userRepository = new UserRepository();
     $users = $userRepository->all();
 
     echo json_encode($users);
@@ -48,23 +55,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-    $authService = new \App\Domain\Service\AuthService(new \App\Domain\Repository\UserRepository());
-    $userId = $authService->register($name, $email, $password);
+    $registerDto = new RegisterDTO(
+        name: $name,
+        email: $email,
+        password: $password,
+        confirmPassword: $password
+    );
 
-    if (!$userId) {
+    $authService = new AuthService(new UserRepository());
+    $userDto = $authService->register($registerDto);
+
+    if (!$userDto) {
         http_response_code(409);
         echo json_encode(['error' => 'Email already exists']);
         exit;
     }
 
     if ($role !== 'user') {
-        $db = \App\Database\Connection::get();
+        $db = Connection::get();
         $stmt = $db->prepare("UPDATE users SET role = ? WHERE id = ?");
-        $stmt->execute([$role, $userId]);
+        $stmt->execute([$role, $userDto->id]);
     }
 
     http_response_code(201);
-    echo json_encode(['success' => true, 'user_id' => $userId]);
+    echo json_encode(['success' => true, 'user_id' => $userDto->id]);
 
 } else {
     http_response_code(405);

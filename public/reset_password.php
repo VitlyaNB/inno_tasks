@@ -1,15 +1,16 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Bootstrap;
 use App\Domain\Support\Helpers;
-use App\Support\Validator;
+use App\Domain\Support\Validator;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Repository\PasswordResetTokenRepository;
 use App\Domain\Service\MailerService;
 use App\Domain\Service\PasswordResetService;
 
 Helpers::ensureSession();
-\App\Bootstrap::run();
+Bootstrap::run();
 
 $token = $_GET['token'] ?? '';
 $done = false;
